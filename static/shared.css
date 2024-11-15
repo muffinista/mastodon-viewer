@@ -1,3 +1,33 @@
 body {
-  background-color: white;
+  background-color: #181821;
+  color: white;
+}
+
+main > header {
+  display: grid;
+  grid-template: "container";
+  max-height: clamp(450px, 50vh, 600px);
+
+  & > * {
+    grid-area: container;
+    max-width: 1000px;
+  }
+
+  & .background > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    max-height: 250px;
+  }
+
+  .account-info {
+    margin-top: 210px;
+    margin-left: 40px;
+
+    & > img {
+      width: 90px;
+      height: 90px;      
+    }
+  }
 }
