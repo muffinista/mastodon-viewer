@@ -22,9 +22,6 @@ $effect(async () => {
       // file is a zip let's deal with it
       const zipFileReader = new BlobReader(file);
 
-      // Creates a ZipReader object reading the zip content via `zipFileReader`,
-      // retrieves metadata (name, dates, etc.) of the first entry, retrieves its
-      // content via `helloWorldWriter`, and closes the reader.
       const zipReader = new ZipReader(zipFileReader);
 
       const entries = await zipReader.getEntries();
@@ -33,18 +30,12 @@ $effect(async () => {
       for ( const entry of entries ) {
         // console.log(entry);
         const mimeType = mime.getType(entry.filename.split('.')?.pop());
-
-        // return URL.createObjectURL(
 				const file = await entry.getData(new BlobWriter(mimeType));
-        // console.log(file);
 
         const data = {
           '_id': entry.filename,
         }
-        // const result = await db.put(data);
-        // console.log(result);
 
-        console.log("PUT", data);
         db.put(data, function callback(err, result) {
           if (!err) {
           } else {
@@ -53,9 +44,7 @@ $effect(async () => {
         });
 
         const doc = await db.get(entry.filename);
-        console.log(doc);
 
-        console.log("PUT ATTACHMENT", entry.filename);
         db.putAttachment(entry.filename, entry.filename, doc._rev, file, mimeType, function callback(err, result) {
           if (!err) {
           } else {
@@ -72,4 +61,4 @@ $effect(async () => {
 });
 </script>
 
-<input id="file"  name="file" type="file" bind:files /><br />
+<input id="file" name="file" type="file" bind:files /><br />

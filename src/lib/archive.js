@@ -11,6 +11,7 @@ export const content = writable(false);
 
 // Anytime the store changes, update the local storage value.
 content.subscribe((value) => {
+  value = typeof(value) === 'boolean' ? value : value === 'true';
   console.log('hasData', value);
   if ( value === null || value === undefined || value === 'undefined') {
     localStorage.removeItem('hasData');
@@ -20,13 +21,15 @@ content.subscribe((value) => {
 });
 
 // Get the value out of storage on load.
-db.get('outbox.json', function callback(err, result) {
-  if ( err ) {
-    console.log(err);
-    content.set(false);
-  } else {
-    console.log(result);
-    content.set(true);
-  }
-});
+content.set(localStorage.getItem('hasData') || false);
+
+// db.get('outbox.json', function callback(err, result) {
+//   if ( err ) {
+//     console.log(err);
+//     content.set(false);
+//   } else {
+//     console.log(result);
+//     content.set(true);
+//   }
+// });
 
