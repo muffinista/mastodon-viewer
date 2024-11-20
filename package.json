@@ -24,7 +24,9 @@
 		"vite": "^5.0.3"
 	},
 	"dependencies": {
+		"@zip.js/zip.js": "^2.7.53",
 		"events": "^3.3.0",
+		"mime": "^4.0.4",
 		"pouchdb": "^9.0.0",
 		"pouchdb-browser": "^9.0.0"
 	}

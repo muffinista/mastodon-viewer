@@ -1,10 +1,12 @@
 <script>
+  import BlobImage from '$lib/components/BlobImage.svelte';
+
   let {attachment} = $props();
   const url = attachment.url.replace('/muffin-industries', '');
 </script>
 
 <div class="attachment">
-  <img src="{url}" alt="{attachment.name}" class="thumbnail"/>
+  <BlobImage src={url} alt={attachment.name} class="thumbnail" />
 </div>
 
 <style>
