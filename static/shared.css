@@ -51,3 +51,13 @@ main > header {
   display: flex;
   flex-direction: column;
 }
+
+.thumbnail img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+dialog img {
+  max-width: 100%;
+  max-height: 100%;
+}

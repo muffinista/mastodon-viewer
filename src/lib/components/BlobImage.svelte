@@ -17,4 +17,4 @@ db.get(src, {attachments: true, binary: true}).then((result) => {
 })
 </script>
 
-<img src="{blob}" alt="{alt}">
+<img src={blob} alt={alt} />
