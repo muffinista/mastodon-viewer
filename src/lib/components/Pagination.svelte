@@ -8,7 +8,6 @@
   } = $props();
 
   let totalRows = $derived(rows.length); 
-  // let currentPage = $state(0);
   let totalPages = $derived(Math.ceil(totalRows / perPage));
   let start =  $derived(currentPage * perPage);
   let end = $derived(currentPage === totalPages - 1 ? totalRows - 1 : start + perPage - 1);
@@ -34,36 +33,3 @@
     <span id='next' class='sr-only'>Load next {perPage} rows</span>
   </div>
 {/if}
-
-
-<style>
-.sr-only {
-  position: absolute;
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0;
-  border: 0;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-}
-  
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: all;
-}
-
-.pagination p {
-    margin: 0 1rem;
-}
-
-.selected {
-  background-color: var(--accent-color)
-}
-
-button {
-  display: flex;
-}
-	
-</style>

@@ -17,7 +17,3 @@ let {profile} = $props();
     </div>
   </a>
 </div>
-
-<style>
-/* moved to shared.css */
-</style>

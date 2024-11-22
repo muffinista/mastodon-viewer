@@ -14,6 +14,3 @@ let {profile} = $props();
     {@html profile.summary}
   </div>
 </header>
-
-<style>
-</style>

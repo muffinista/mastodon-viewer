@@ -17,6 +17,3 @@
 <Modal bind:showModal>
   <BlobImage src={url} alt={attachment.name} />
 </Modal>
-
-<style>
-</style>
