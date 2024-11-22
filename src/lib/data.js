@@ -1,12 +1,13 @@
+export const ssr = false;
+
 import PouchDB from 'pouchdb';
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import mime from 'mime/lite';
 
-export const ssr = false;
 
+const db = new PouchDB('toot-archive');
 
 export async function loadAll() {
-	const db = new PouchDB('toot-archive');
 	const outboxRaw = await db.get('outbox.json', {attachments: true, binary: true});
 	const outbox = JSON.parse(await outboxRaw._attachments['outbox.json'].data.text());
 
@@ -35,7 +36,6 @@ export async function loadAll() {
 }
 
 export async function populate(file) {
-	const db = new PouchDB('toot-archive');
 
   // file is a zip let's deal with it
   const zipFileReader = new BlobReader(file);
@@ -54,21 +54,21 @@ export async function populate(file) {
       '_id': entry.filename,
     }
 
-    db.put(data, function callback(err, result) {
-      if (!err) {
-      } else {
-        // console.log(err);
-      }
-    });
+    try {
+      await db.put(data);
 
-    const doc = await db.get(entry.filename);
+      const doc = await db.get(entry.filename);
+      await db.putAttachment(entry.filename, entry.filename, doc._rev, file, mimeType);  
+    } catch (e) {
 
-    db.putAttachment(entry.filename, entry.filename, doc._rev, file, mimeType, function callback(err, result) {
-      if (!err) {
-      } else {
-        // console.log(err);
-      }
-    });
-
+    }
   } // for entries
+}
+
+export async function getBlob(src) {
+  src = src.replace(/^\/media_attachments/, 'media_attachments');
+
+  const result = await db.get(src, {attachments: true, binary: true});
+  const data = result._attachments[src].data;
+  return URL.createObjectURL(data);
 }
