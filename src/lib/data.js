@@ -4,10 +4,8 @@ import PouchDB from 'pouchdb';
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import mime from 'mime/lite';
 
-
-const db = new PouchDB('toot-archive');
-
 export async function loadAll() {
+  const db = new PouchDB('toot-archive');
 	const outboxRaw = await db.get('outbox.json', {attachments: true, binary: true});
 	const outbox = JSON.parse(await outboxRaw._attachments['outbox.json'].data.text());
 
@@ -36,6 +34,7 @@ export async function loadAll() {
 }
 
 export async function populate(file) {
+  const db = new PouchDB('toot-archive');
 
   // file is a zip let's deal with it
   const zipFileReader = new BlobReader(file);
@@ -66,6 +65,7 @@ export async function populate(file) {
 }
 
 export async function getBlob(src) {
+  const db = new PouchDB('toot-archive');
   src = src.replace(/^\/media_attachments/, 'media_attachments');
 
   const result = await db.get(src, {attachments: true, binary: true});
