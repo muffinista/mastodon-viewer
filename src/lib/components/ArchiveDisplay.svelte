@@ -1,20 +1,16 @@
 <script>
 	import Pagination from '$lib/components/Pagination.svelte';
 	import Status from '$lib/components/Status.svelte';
-  import ProfileHeader from './ProfileHeader.svelte';
-	
-	let { 
-		data,
-		content = $bindable()
-	} = $props();
+	import ProfileHeader from '$lib/components/ProfileHeader.svelte';
+
+	let { data, content = $bindable() } = $props();
 
 	let page = $state(0);
-	const perPage = 20;
+	const perPage = parseInt(document.querySelector('body').dataset.tootsPerPage || 20, 10);
 	let values = $derived(data.toots.slice(page * perPage, (page + 1) * perPage));
 
 	function reset() {
 		$content = false;
-		
 	}
 </script>
 
@@ -23,7 +19,7 @@
 <button onclick={() => reset()}>reset!</button>
 
 {#each values as { id, content, published, sensitive, attachment }, i}
-	<Status id={id} content={content} published={published} attachment={attachment} profile={data.profile} />
+	<Status {id} {content} {published} {attachment} profile={data.profile} />
 {/each}
 
-<Pagination rows={data.toots} perPage={perPage} bind:currentPage={page} />
+<Pagination rows={data.toots} {perPage} bind:currentPage={page} />

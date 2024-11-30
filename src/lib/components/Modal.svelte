@@ -1,7 +1,7 @@
 <script>
-  // https://svelte.dev/playground/modal?version=5.2.6
+	// https://svelte.dev/playground/modal?version=5.2.6
 
-  let { showModal = $bindable(), children } = $props();
+	let { showModal = $bindable(), children } = $props();
 
 	let dialog = $state(); // HTMLDialogElement
 
@@ -14,7 +14,9 @@
 <dialog
 	bind:this={dialog}
 	onclose={() => (showModal = false)}
-	onclick={(e) => { if (e.target === dialog) dialog.close(); }}
+	onclick={(e) => {
+		if (e.target === dialog) dialog.close();
+	}}
 >
 	<div>
 		{@render children?.()}
