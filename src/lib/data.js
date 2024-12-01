@@ -21,6 +21,7 @@ export async function loadAll() {
 
 		// @todo check visibility
 		return {
+			db,
 			toots: outbox.orderedItems
 				// 'Announce' is for boosts, ignore for now since they don't have any data really
 				.filter((toot) => toot.type !== 'Announce')

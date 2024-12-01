@@ -32,6 +32,13 @@ main > header {
 	}
 }
 
+main > section {
+	display: flex;
+}
+aside.controls {
+
+}
+
 .profile > a {
 	display: flex;
 }
