@@ -34,7 +34,7 @@ main > header {
 
 main > section {
 	display: flex;
-	toots {
+	.toots {
 		min-width: 66vw;
 	}
 }

@@ -28,7 +28,6 @@ export async function loadAll() {
 					const id = toot.object.id.split(/\//).slice(-1)[0];
 					let visibility;
 
-					console.log(toot.object.tag);
 					if (toot.object.directMessage === true ) {
 						visibility = "direct"; 
 					}
@@ -41,13 +40,17 @@ export async function loadAll() {
 					} 
 					// gotta figure out what differentiates direct and private here
 
+
+					const tags = toot.object.tag.filter((t) => t.type === "Hashtag").map((t) => t.name);
+
 					return {
 						id: id,
 						published: toot.object.published,
 						sensitive: toot.object.sensitive,
 						content: toot.object.content,
 						attachment: toot.object.attachment,
-						visibility: visibility
+						visibility,
+						tags
 					};
 				})
 				.reverse(),

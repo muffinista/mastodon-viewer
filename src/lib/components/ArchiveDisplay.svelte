@@ -47,13 +47,15 @@
 		const visibilitiesToInclude = visibilities();
 
 		base = base.filter((data) => {
-			// console.log(visibilitiesToInclude, data.visibility);
 			return visibilitiesToInclude.includes(data.visibility); 
 		});
 
 		if ( query !== "" && query !== undefined ) {
 			base = base.filter((data) => {
-				return data.content.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1;
+				return (
+					data.content.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1 ||
+					data.tags.join(" ").toLowerCase().lastIndexOf(query.toLowerCase()) !== -1
+				);
 			})
 		}
 

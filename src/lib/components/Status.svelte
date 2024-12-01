@@ -3,13 +3,24 @@
 	import Attachment from './Attachment.svelte';
 
 	let { content, id, published, profile, attachment } = $props();
+
+	let wrapper;
+
+	$effect(() => {
+		wrapper.querySelectorAll("a.hashtag").forEach((el) => {
+			console.log(el.href);
+			const parts = el.href.split("/");
+			const hashtag = parts[parts.length - 1];
+			el.href = `/tag/${hashtag}`;
+		})
+	});
 </script>
 
 <article class="status">
 	<header>
 		<Profile {profile} />
 	</header>
-	<div class="content">
+	<div class="content" bind:this={wrapper}>
 		{@html content}
 	</div>
 	<div class="attachments">
