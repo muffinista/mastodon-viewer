@@ -19,7 +19,6 @@ export async function loadAll() {
 		const profileRaw = await db.get('actor.json', { attachments: true, binary: true });
 		const profile = JSON.parse(await profileRaw._attachments['actor.json'].data.text());
 
-		// @todo check visibility
 		return {
 			db,
 			toots: outbox.orderedItems
@@ -27,13 +26,28 @@ export async function loadAll() {
 				.filter((toot) => toot.type !== 'Announce')
 				.map((toot) => {
 					const id = toot.object.id.split(/\//).slice(-1)[0];
+					let visibility;
+
+					console.log(toot.object.tag);
+					if (toot.object.directMessage === true ) {
+						visibility = "direct"; 
+					}
+					else if ( toot.object.to[0]?.lastIndexOf("Public") !== -1 || toot.object.cc[0]?.lastIndexOf("Public") !== -1 ) {
+						visibility = "public";
+					} else if (toot.object.to[0]?.lastIndexOf("/followers") !== -1 || toot.object.cc[0]?.lastIndexOf("/followers") !== -1) {
+						visibility = "unlisted";
+					} else {
+						// console.log(toot);
+					} 
+					// gotta figure out what differentiates direct and private here
 
 					return {
 						id: id,
 						published: toot.object.published,
 						sensitive: toot.object.sensitive,
 						content: toot.object.content,
-						attachment: toot.object.attachment
+						attachment: toot.object.attachment,
+						visibility: visibility
 					};
 				})
 				.reverse(),
