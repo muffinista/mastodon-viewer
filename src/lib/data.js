@@ -41,7 +41,7 @@ export async function loadAll() {
 					// gotta figure out what differentiates direct and private here
 
 
-					const tags = toot.object.tag.filter((t) => t.type === "Hashtag").map((t) => t.name);
+					const tags = toot.object.tag.filter((t) => t.type === "Hashtag").map((t) => t.name.replace(/^#/, ''));
 
 					return {
 						id: id,

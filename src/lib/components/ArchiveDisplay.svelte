@@ -75,8 +75,8 @@
 
 <section class="guts">
 	<div class="toots">
-		{#each values as { id, content, published, sensitive, attachment }, i}
-			<Status {id} {content} {published} {attachment} profile={data.profile} />
+		{#each values as { id, content, published, sensitive, attachment, tags }, i}
+			<Status {id} {content} {published} {attachment} {tags} profile={data.profile} />
 		{/each}
 		<Pagination rows={data.toots} {perPage} bind:currentPage={page} />
 	</div>	

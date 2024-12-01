@@ -2,7 +2,7 @@
 	import Profile from './Profile.svelte';
 	import Attachment from './Attachment.svelte';
 
-	let { content, id, published, profile, attachment } = $props();
+	let { content, id, published, profile, attachment, tags } = $props();
 
 	let wrapper;
 
@@ -26,6 +26,11 @@
 	<div class="attachments">
 		{#each attachment as a}
 			<Attachment attachment={a} />
+		{/each}
+	</div>
+	<div class="tags">
+		{#each tags as t}
+			<a href="/tag/{t}">#{t}</a>
 		{/each}
 	</div>
 	<footer>
