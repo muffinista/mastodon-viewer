@@ -9,7 +9,7 @@
 </script>
 
 <div class="attachment">
-	<a href="#" class="thumbnail" onclick={() => (showModal = true)}>
+	<a href="{url}" class="thumbnail" onclick={(e) => {e.preventDefault(); e.stopPropagation(); showModal = true}}>
 		<BlobImage src={url} alt={attachment.name} />
 	</a>
 </div>

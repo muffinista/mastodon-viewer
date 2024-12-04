@@ -30,10 +30,6 @@
 			values.push('unlisted');
 		}
 
-		// if ( privateStatuses ) {
-		// 	values.push('private');
-		// }
-		
 		if ( directStatuses ) {
 			values.push('direct');
 		}
@@ -80,24 +76,35 @@
 		{/each}
 		<Pagination rows={data.toots} {perPage} bind:currentPage={page} />
 	</div>	
-	<aside class="controls">
-		<form>
-			<label>
-				<input type="checkbox" bind:checked={publicStatuses} onchange={applyFilters} />
-				Include public statuses
-			</label>
-			<label>
-				<input type="checkbox" bind:checked={unlistedStatuses} onchange={applyFilters} />
-				Include unlisted statuses
-			</label>
-			<label>
-				<input type="checkbox" bind:checked={directStatuses} onchange={applyFilters} />
-				Include private statuses/direct messages
-			</label>
 
-			<input type="text" bind:value="{query}" onkeydown={searchKeyDown} />
+	<aside class="controls">
+		<h1>Filters</h1>
+		<form>
+			<fieldset>
+				<label>
+					<input type="checkbox" bind:checked={publicStatuses} onchange={applyFilters} />
+					Include public statuses
+				</label>
+				<label>
+					<input type="checkbox" bind:checked={unlistedStatuses} onchange={applyFilters} />
+					Include unlisted statuses
+				</label>
+				<label>
+					<input type="checkbox" bind:checked={directStatuses} onchange={applyFilters} />
+					Include private statuses
+				</label>
+			</fieldset>	
+			<fieldset>
+				<input type="text" bind:value="{query}" placeholder="search" onkeydown={searchKeyDown} />
+			</fieldset>
 		</form>
-		<button onclick={() => reset()}>reset!</button>
+
+		<form>
+			<fieldset>
+				<button onclick={() => reset()}>reset!</button>
+			</fieldset>
+		</form>
 	</aside>
+	
 </section>
 
