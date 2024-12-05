@@ -1,5 +1,5 @@
 <script>
-	import { getUrlToFile } from '$lib/data.js';
+	import { getUrlToFile } from '../data.js';
 
 	export const ssr = false;
 	let { src, alt } = $props();
