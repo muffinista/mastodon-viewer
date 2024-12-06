@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { viteSingleFile } from 'vite-plugin-singlefile';
+// import { viteSingleFile } from 'vite-plugin-singlefile';
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [svelte(), viteSingleFile()],
+	plugins: [svelte()], // , viteSingleFile()
 	optimizeDeps: {
 		allowNodeBuiltins: ['pouchdb-browser', 'pouchdb-utils']
 	}
