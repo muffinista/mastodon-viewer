@@ -28,7 +28,6 @@ a:visited {
 	color: var(--link-visited-color);
 }
 
-/** profile display */
 main > header {
 	display: grid;
 	grid-template: 'container';
@@ -125,6 +124,7 @@ article.status {
 	flex-direction: column;
 	margin-bottom: 1em;
 	border-bottom: 1px solid #dddddd;
+	width: var(--status-width);
 	max-width: 800px;
 
 	footer {
@@ -150,7 +150,6 @@ article.status {
 	}
 }
 
-/** screenreader descriptions for pagination */
 .sr-only {
 	position: absolute;
 	clip: rect(1px, 1px, 1px, 1px);
@@ -159,4 +158,39 @@ article.status {
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
+}
+
+dialog {
+	max-width: 100em;
+	border-radius: 0.2em;
+	border: none;
+	padding: 0;
+}
+dialog::backdrop {
+	background: rgba(0, 0, 0, 0.3);
+}
+dialog > div {
+	padding: 1em;
+}
+dialog[open] {
+	animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes zoom {
+	from {
+		transform: scale(0.95);
+	}
+	to {
+		transform: scale(1);
+	}
+}
+dialog[open]::backdrop {
+	animation: fade 0.2s ease-out;
+}
+@keyframes fade {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }

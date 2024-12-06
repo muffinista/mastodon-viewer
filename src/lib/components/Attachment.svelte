@@ -1,6 +1,6 @@
 <script>
-	import BlobImage from '$lib/components/BlobImage.svelte';
-	import Modal from '$lib/components/Modal.svelte';
+	import BlobImage from './BlobImage.svelte';
+	import Modal from './Modal.svelte';
 
 	let { attachment } = $props();
 	const url = attachment.url.replace('/muffin-industries', '');

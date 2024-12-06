@@ -10,6 +10,7 @@ export async function loadAll() {
 
 	try {
 		if (useFetch) {
+			console.log("load with fetch!");
 			await populateFromFetch();
 		}
 

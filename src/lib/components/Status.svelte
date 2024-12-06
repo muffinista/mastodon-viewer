@@ -34,6 +34,6 @@
 		{/each}
 	</div>
 	<footer>
-		<a href="/status/{id}">{published}</a>
+		<a href="#/status/{id}">{published}</a>
 	</footer>
 </article>

@@ -1,16 +1,15 @@
 <script>
-	import Pagination from '$lib/components/Pagination.svelte';
-	import Status from '$lib/components/Status.svelte';
-	import ProfileHeader from '$lib/components/ProfileHeader.svelte';
+	import Pagination from './Pagination.svelte';
+	import Status from './Status.svelte';
+	import ProfileHeader from './ProfileHeader.svelte';
 
-	let { data, content = $bindable() } = $props();
+	let { data, status_id, content = $bindable() } = $props();
 
 	let page = $state(0);
 	let query = $state();
 
 	let publicStatuses = $state(true);
 	let unlistedStatuses = $state(true);
-	// let privateStatuses = $state(false);
 	let directStatuses = $state(false);
 
 	const perPage = parseInt(document.querySelector('body').dataset.tootsPerPage || 20, 10);

@@ -1,5 +1,5 @@
 <script>
-	import BlobImage from '$lib/components/BlobImage.svelte';
+	import BlobImage from './BlobImage.svelte';
 	let { profile } = $props();
 </script>
 
