@@ -1,5 +1,5 @@
 <script>
-	import { populateFromArchive } from '../data'
+	import { populateFromArchive } from '../data';
 
 	export const ssr = false;
 

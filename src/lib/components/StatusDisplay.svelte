@@ -7,7 +7,7 @@
 	let status = $derived(findStatus());
 
 	function findStatus() {
-    return data.toots.find((t) => t.id === status_id);
+		return data.toots.find((t) => t.id === status_id);
 	}
 </script>
 
@@ -15,13 +15,13 @@
 
 <section class="guts">
 	<div class="toots">
-			<Status 
-        id={status.id} 
-        content={status.content} 
-        published={status.published} 
-        attachment={status.attachment} 
-        tags={status.tags} 
-        profile={data.profile} />
+		<Status
+			id={status.id}
+			content={status.content}
+			published={status.published}
+			attachment={status.attachment}
+			tags={status.tags}
+			profile={data.profile}
+		/>
 	</div>
 </section>
-

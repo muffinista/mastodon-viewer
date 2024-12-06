@@ -7,12 +7,12 @@
 	let wrapper;
 
 	$effect(() => {
-		wrapper.querySelectorAll("a.hashtag").forEach((el) => {
+		wrapper.querySelectorAll('a.hashtag').forEach((el) => {
 			console.log(el.href);
-			const parts = el.href.split("/");
+			const parts = el.href.split('/');
 			const hashtag = parts[parts.length - 1];
 			el.href = `/tag/${hashtag}`;
-		})
+		});
 	});
 </script>
 

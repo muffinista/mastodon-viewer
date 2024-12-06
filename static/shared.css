@@ -5,12 +5,12 @@
 	--text-color: white;
 	--link-color: rgb(140, 141, 255);
 	--link-visited-color: rgb(140, 141, 255);
-	--status-width: 700px;	
+	--status-width: 700px;
 
 	--profile-name-color: white;
 
 	--avatar-size: 46px;
-	--thumbnail-size: 200px;	
+	--thumbnail-size: 200px;
 }
 
 body {
@@ -71,13 +71,12 @@ main > section {
 		fieldset {
 			display: flex;
 			flex-direction: column;
-			margin-bottom: 1.0rem;
+			margin-bottom: 1rem;
 			margin-left: 0px;
 			border: none;
-		}	
+		}
 	}
 }
-
 
 .profile > a {
 	display: flex;
@@ -110,14 +109,13 @@ main > section {
 		.thumbnail img {
 			max-width: var(--thumbnail-size);
 			max-height: var(--thumbnail-size);
-		}	
+		}
 	}
 	.attachment + dialog img {
 		max-width: 100%;
 		max-height: 100%;
-	}		
+	}
 }
-
 
 article.status {
 	display: flex;

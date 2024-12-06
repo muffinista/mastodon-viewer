@@ -10,7 +10,7 @@ export async function loadAll() {
 
 	try {
 		if (useFetch) {
-			console.log("load with fetch!");
+			console.log('load with fetch!');
 			await populateFromFetch();
 		}
 
@@ -29,20 +29,26 @@ export async function loadAll() {
 					const id = toot.object.id.split(/\//).slice(-1)[0];
 					let visibility;
 
-					if (toot.object.directMessage === true ) {
-						visibility = "direct"; 
-					}
-					else if ( toot.object.to[0]?.lastIndexOf("Public") !== -1 || toot.object.cc[0]?.lastIndexOf("Public") !== -1 ) {
-						visibility = "public";
-					} else if (toot.object.to[0]?.lastIndexOf("/followers") !== -1 || toot.object.cc[0]?.lastIndexOf("/followers") !== -1) {
-						visibility = "unlisted";
+					if (toot.object.directMessage === true) {
+						visibility = 'direct';
+					} else if (
+						toot.object.to[0]?.lastIndexOf('Public') !== -1 ||
+						toot.object.cc[0]?.lastIndexOf('Public') !== -1
+					) {
+						visibility = 'public';
+					} else if (
+						toot.object.to[0]?.lastIndexOf('/followers') !== -1 ||
+						toot.object.cc[0]?.lastIndexOf('/followers') !== -1
+					) {
+						visibility = 'unlisted';
 					} else {
 						// console.log(toot);
-					} 
+					}
 					// gotta figure out what differentiates direct and private here
 
-
-					const tags = toot.object.tag.filter((t) => t.type === "Hashtag").map((t) => t.name.replace(/^#/, ''));
+					const tags = toot.object.tag
+						.filter((t) => t.type === 'Hashtag')
+						.map((t) => t.name.replace(/^#/, ''));
 
 					return {
 						id: id,

@@ -22,14 +22,14 @@
 	function visibilities() {
 		const values = [];
 
-		if ( publicStatuses ) {
+		if (publicStatuses) {
 			values.push('public');
 		}
-		if ( unlistedStatuses ) {
+		if (unlistedStatuses) {
 			values.push('unlisted');
 		}
 
-		if ( directStatuses ) {
+		if (directStatuses) {
 			values.push('direct');
 		}
 
@@ -42,23 +42,23 @@
 		const visibilitiesToInclude = visibilities();
 
 		base = base.filter((data) => {
-			return visibilitiesToInclude.includes(data.visibility); 
+			return visibilitiesToInclude.includes(data.visibility);
 		});
 
-		if ( query !== "" && query !== undefined ) {
+		if (query !== '' && query !== undefined) {
 			base = base.filter((data) => {
 				return (
 					data.content.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1 ||
-					data.tags.join(" ").toLowerCase().lastIndexOf(query.toLowerCase()) !== -1
+					data.tags.join(' ').toLowerCase().lastIndexOf(query.toLowerCase()) !== -1
 				);
-			})
+			});
 		}
 
 		return base.slice(page * perPage, (page + 1) * perPage);
 	}
 
 	function searchKeyDown(event) {
-		if ( event.key === "Enter" ) {
+		if (event.key === 'Enter') {
 			applyFilters();
 			event.preventDefault();
 			return;
@@ -74,7 +74,7 @@
 			<Status {id} {content} {published} {attachment} {tags} profile={data.profile} />
 		{/each}
 		<Pagination rows={data.toots} {perPage} bind:currentPage={page} />
-	</div>	
+	</div>
 
 	<aside class="controls">
 		<h1>Filters</h1>
@@ -92,9 +92,9 @@
 					<input type="checkbox" bind:checked={directStatuses} onchange={applyFilters} />
 					Include private statuses
 				</label>
-			</fieldset>	
+			</fieldset>
 			<fieldset>
-				<input type="text" bind:value="{query}" placeholder="search" onkeydown={searchKeyDown} />
+				<input type="text" bind:value={query} placeholder="search" onkeydown={searchKeyDown} />
 			</fieldset>
 		</form>
 
@@ -104,6 +104,4 @@
 			</fieldset>
 		</form>
 	</aside>
-	
 </section>
-
