@@ -124,6 +124,7 @@ article.status {
 	flex-direction: column;
 	margin-bottom: 1em;
 	border-bottom: 1px solid #dddddd;
+	width: var(--status-width);
 	max-width: 800px;
 
 	footer {

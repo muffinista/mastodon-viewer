@@ -3,7 +3,7 @@
 	import Status from './Status.svelte';
 	import ProfileHeader from './ProfileHeader.svelte';
 
-	let { data, content = $bindable() } = $props();
+	let { data, status_id, content = $bindable() } = $props();
 
 	let page = $state(0);
 	let query = $state();
