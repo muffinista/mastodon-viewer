@@ -1,7 +1,7 @@
 export const ssr = false;
 
 import PouchDB from 'pouchdb';
-import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, ZipReader, ZipWriter, TextReader } from '@zip.js/zip.js';
 import mime from 'mime/lite';
 
 export async function loadAll() {
@@ -125,6 +125,79 @@ export async function populateFromArchive(file) {
 			await db.putAttachment(entry.filename, entry.filename, doc._rev, file, mimeType);
 		} catch (e) {}
 	} // for entries
+}
+
+
+async function fetchAndZip(zipWriter, name, url) {
+	console.log(`fetch ${url} -> ${name}`);
+	const src = await fetch(url).then((result) => result.text());
+	const reader = new TextReader(src);
+	return zipWriter.add(name, reader);	
+}
+
+export async function generateWebsiteZip(statuses, profile) {
+	const zipFileWriter = new BlobWriter();
+	const zipWriter = new ZipWriter(zipFileWriter);
+
+	const dataReader = new TextReader(JSON.stringify(statuses));
+	await zipWriter.add("outbox.json", dataReader);
+
+	const profileReader = new TextReader(JSON.stringify(profile));
+	await zipWriter.add("actor.json", profileReader);
+
+	const db = new PouchDB('toot-archive');
+
+	const html = await fetch("index.html").then((result) => result.text());
+	const template = document.createElement('template');
+	template.innerHTML = html;
+
+	for (const el of Array.from(template.content.querySelectorAll('script'))) {
+		const src = new URL(el.src);
+		await fetchAndZip(zipWriter, src.pathname, src);
+	}	
+
+	for (const el of Array.from(template.content.querySelectorAll('link'))) {
+		const src = new URL(el.href);
+		await fetchAndZip(zipWriter, src.pathname, src);
+	}	
+
+	//
+	// generate promises for the actions required to add files to the zip archive
+	// using Promise.all should be a little more concurrent/performant
+	//
+	const actions = statuses.map(status => {
+		const promises = [];
+
+		const filename = `statuses/${status.id}.html`;
+
+		const content = html.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`);
+		const statusReader = new TextReader(content);
+
+		promises.push(zipWriter.add(filename, statusReader));
+
+		for (const attachment of status.attachment) {
+			const url = attachment.url.replace(/^\/[^/]+\/media_attachments\//, 'media_attachments/');
+			const promise = db.get(url, { attachments: true, binary: true }).then((result) => {
+				const data = result._attachments[url].data;
+
+				const blobReader = new BlobReader(data);	
+				zipWriter.add(url, blobReader);
+			})
+			promises.push(promise);	
+		}
+	});
+
+	await Promise.all(actions.flat());
+
+	await zipWriter.close();	
+
+
+	// Retrieves the Blob object containing the zip content into `zipFileBlob`. It
+	// is also returned by zipWriter.close() for more convenience.
+	const zipFileBlob = await zipFileWriter.getData();
+	const fileUrl = URL.createObjectURL(zipFileBlob);
+	console.log(fileUrl);
+	return fileUrl;
 }
 
 export async function getUrlToFile(src) {

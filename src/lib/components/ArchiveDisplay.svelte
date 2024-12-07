@@ -2,8 +2,9 @@
 	import Pagination from './Pagination.svelte';
 	import Status from './Status.svelte';
 	import ProfileHeader from './ProfileHeader.svelte';
+	import { generateWebsiteZip } from '../data';
 
-	let { data, status_id, content = $bindable() } = $props();
+	let { data, content = $bindable() } = $props();
 
 	let page = $state(0);
 	let query = $state();
@@ -14,6 +15,7 @@
 
 	const perPage = parseInt(document.querySelector('body').dataset.tootsPerPage || 20, 10);
 	let values = $derived(applyFilters());
+	let paged = $derived(toPaged(values)); 
 
 	function reset() {
 		$content = false;
@@ -54,6 +56,10 @@
 			});
 		}
 
+		return base;
+	}
+
+	function toPaged(base) {
 		return base.slice(page * perPage, (page + 1) * perPage);
 	}
 
@@ -64,13 +70,20 @@
 			return;
 		}
 	}
+
+	async function generateArchive() {
+		const archiveHref = await generateWebsiteZip(values, data.profile);
+		const el = document.querySelector(".download-link");
+		el.href = archiveHref;
+		el.download = "mastodon-archive.zip"
+	}
 </script>
 
 <ProfileHeader profile={data.profile} />
 
 <section class="guts">
 	<div class="toots">
-		{#each values as { id, content, published, sensitive, attachment, tags }, i}
+		{#each paged as { id, content, published, sensitive, attachment, tags }, i}
 			<Status {id} {content} {published} {attachment} {tags} profile={data.profile} />
 		{/each}
 		<Pagination rows={data.toots} {perPage} bind:currentPage={page} />
@@ -98,10 +111,13 @@
 			</fieldset>
 		</form>
 
-		<form>
-			<fieldset>
-				<button onclick={() => reset()}>reset!</button>
-			</fieldset>
-		</form>
+		<fieldset>
+			<button onclick={() => generateArchive()}>generate archive!</button>
+			<a class="download-link" href="">download!</a>
+		</fieldset>
+
+		<fieldset>
+			<button onclick={() => reset()}>reset!</button>
+		</fieldset>
 	</aside>
 </section>
