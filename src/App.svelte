@@ -18,10 +18,15 @@
 	let status_id = $derived(checkForStatus());
 
 	function checkForStatus() {
-		if ($url.hash.lastIndexOf('status/') === -1) {
-			return undefined;
+		if ( document.querySelector('body').dataset.statusId ) {
+			return document.querySelector('body').dataset.statusId;
 		}
-		return $url.hash.split('/')[2];
+
+		if ($url.hash.lastIndexOf('status/') !== -1) {
+			return $url.hash.split('/')[2];
+		}
+
+		return undefined;
 	}
 
 	onMount(async () => {

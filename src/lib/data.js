@@ -148,6 +148,11 @@ export async function generateWebsiteZip(statuses, profile) {
 	const db = new PouchDB('toot-archive');
 
 	const html = await fetch("index.html").then((result) => result.text());
+
+	const indexReader = new TextReader(html);
+	await zipWriter.add("index.html", indexReader);
+
+	// query the index file for attached JS/CSS/assets
 	const template = document.createElement('template');
 	template.innerHTML = html;
 
@@ -170,7 +175,12 @@ export async function generateWebsiteZip(statuses, profile) {
 
 		const filename = `statuses/${status.id}.html`;
 
-		const content = html.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`);
+		const content = html
+		.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`)
+		.replace(/src="/g, 'src="..')
+		.replace(/href="/g, 'href="..');
+
+		// add a base href?
 		const statusReader = new TextReader(content);
 
 		promises.push(zipWriter.add(filename, statusReader));
