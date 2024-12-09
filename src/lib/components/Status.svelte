@@ -8,10 +8,9 @@
 
 	$effect(() => {
 		wrapper.querySelectorAll('a.hashtag').forEach((el) => {
-			console.log(el.href);
 			const parts = el.href.split('/');
 			const hashtag = parts[parts.length - 1];
-			el.href = `/tag/${hashtag}`;
+			el.href = `#/tag/${hashtag}`;
 		});
 	});
 </script>
@@ -30,7 +29,7 @@
 	</div>
 	<div class="tags">
 		{#each tags as t}
-			<a href="/tag/{t}">#{t}</a>
+			<a href="#/tag/{t}">#{t}</a>
 		{/each}
 	</div>
 	<footer>

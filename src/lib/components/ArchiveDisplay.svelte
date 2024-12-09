@@ -4,7 +4,7 @@
 	import ProfileHeader from './ProfileHeader.svelte';
 	import { generateWebsiteZip } from '../data';
 
-	let { data, content = $bindable() } = $props();
+	let { data, content = $bindable(), tag = $bindable() } = $props();
 
 	let page = $state(0);
 	let query = $state();
@@ -56,6 +56,14 @@
 			});
 		}
 
+		if (tag !== '' && tag !== undefined) {
+			base = base.filter((data) => {
+				return (
+					data.tags.join(' ').toLowerCase().lastIndexOf(tag.toLowerCase()) !== -1
+				);
+			});
+		}
+
 		return base;
 	}
 
@@ -86,7 +94,7 @@
 		{#each paged as { id, content, published, sensitive, attachment, tags }, i}
 			<Status {id} {content} {published} {attachment} {tags} profile={data.profile} />
 		{/each}
-		<Pagination rows={data.toots} {perPage} bind:currentPage={page} />
+		<Pagination rows={values} {perPage} bind:currentPage={page} />
 	</div>
 
 	<aside class="controls">

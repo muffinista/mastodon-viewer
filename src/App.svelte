@@ -16,6 +16,7 @@
 	let loaded = $state(false);
 	let data = $state();
 	let status_id = $derived(checkForStatus());
+	let tag = $derived(checkForTag());
 
 	function checkForStatus() {
 		if ( document.querySelector('body').dataset.statusId ) {
@@ -23,6 +24,18 @@
 		}
 
 		if ($url.hash.lastIndexOf('status/') !== -1) {
+			return $url.hash.split('/')[2];
+		}
+
+		return undefined;
+	}
+
+	function checkForTag() {
+		// if ( document.querySelector('body').dataset.statusId ) {
+		// 	return document.querySelector('body').dataset.statusId;
+		// }
+
+		if ($url.hash.lastIndexOf('tag/') !== -1) {
 			return $url.hash.split('/')[2];
 		}
 
@@ -40,7 +53,7 @@
 		{#if status_id !== undefined}
 			<StatusDisplay {data} {status_id} />
 		{:else}
-			<ArchiveDisplay {data} {content} {status_id} />
+			<ArchiveDisplay {data} {content} {tag} />
 		{/if}
 	{:else}
 		<ZipChooser {content} />
