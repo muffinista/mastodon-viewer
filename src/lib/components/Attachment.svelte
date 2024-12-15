@@ -3,7 +3,7 @@
 	import Modal from './Modal.svelte';
 
 	let { attachment } = $props();
-	const url = attachment.url.replace('/muffin-industries', '');
+	const url = attachment.url.replace(/^\/[^/]+\/media_attachments\//, 'media_attachments/');
 
 	let showModal = $state(false);
 </script>
