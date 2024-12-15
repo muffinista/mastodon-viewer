@@ -1,6 +1,6 @@
 :root {
-	--font-family: default;
-	--font-size: 18px;
+	--font-family: system-ui;
+	--font-size: 16px;
 	--background-color: #181821;
 	--text-color: white;
 	--link-color: rgb(140, 141, 255);
