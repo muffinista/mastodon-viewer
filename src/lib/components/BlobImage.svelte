@@ -9,5 +9,5 @@
 {#await blob}
 	...
 {:then blob}
-	<img src={blob} {alt} />
+	<img src={blob} {alt} title={alt} />
 {/await}
