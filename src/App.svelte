@@ -8,10 +8,6 @@
 	import { url } from './lib/url.js';
 
 
-	// This can be false if you're using a fallback (i.e. SPA mode)
-	export const prerender = true;
-	export const trailingSlash = 'always';
-
 	let loaded = $state(false);
 	let data = $state();
 	let status_id = $derived(checkForStatus());
@@ -30,15 +26,17 @@
 	}
 
 	function checkForTag() {
-		// if ( document.querySelector('body').dataset.statusId ) {
-		// 	return document.querySelector('body').dataset.statusId;
-		// }
-
 		if ($url.hash.lastIndexOf('tag/') !== -1) {
 			return $url.hash.split('/')[2];
 		}
 
 		return undefined;
+	}
+
+	let onComplete = async function onComplete () {
+		data = await loadAll();
+		loaded = true;
+		$content = true;
 	}
 
 	onMount(async () => {
@@ -55,6 +53,6 @@
 			<ArchiveDisplay {data} {content} {tag} />
 		{/if}
 	{:else}
-		<ZipChooser {content} />
+		<ZipChooser {onComplete} />
 	{/if}
 {/if}

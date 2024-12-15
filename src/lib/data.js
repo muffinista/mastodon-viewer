@@ -102,18 +102,27 @@ export async function clearData() {
 	await db.destroy();
 }
 
-export async function populateFromArchive(file) {
+export async function populateFromArchive(file, callback) {
+	if ( callback === undefined ) {
+		callback = console.log;
+	}
+
 	const db = new PouchDB('toot-archive');
 
 	// file is a zip let's deal with it
+	callback("Loading zip");
 	const zipFileReader = new BlobReader(file);
 
 	const zipReader = new ZipReader(zipFileReader);
 
 	const entries = await zipReader.getEntries();
-	console.log(entries);
+	// console.log(entries);
+
+	callback("Processing statuses");
 
 	for (const entry of entries) {
+		callback(`processing ${entry.filename}`);
+
 		const mimeType = mime.getType(entry.filename.split('.')?.pop());
 		const file = await entry.getData(new BlobWriter(mimeType));
 
@@ -128,6 +137,8 @@ export async function populateFromArchive(file) {
 			await db.putAttachment(entry.filename, entry.filename, doc._rev, file, mimeType);
 		} catch (e) {}
 	} // for entries
+
+	callback('Done!');
 }
 
 
