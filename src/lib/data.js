@@ -1,5 +1,3 @@
-export const ssr = false;
-
 import PouchDB from 'pouchdb';
 import { BlobReader, BlobWriter, ZipReader, ZipWriter, TextReader } from '@zip.js/zip.js';
 import mime from 'mime/lite';

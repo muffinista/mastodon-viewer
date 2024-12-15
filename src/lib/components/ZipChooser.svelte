@@ -1,7 +1,6 @@
 <script>
 	import { populateFromArchive } from '../data';
 
-	export const ssr = false;
 
 	let files = $state();
 

@@ -4,6 +4,11 @@
 
 	let { content, id, published, profile, attachment, tags } = $props();
 
+	const dateOptions = {
+		dateStyle: 'short',
+		timeStyle: 'short'
+	};
+
 	let wrapper;
 
 	$effect(() => {
@@ -33,6 +38,6 @@
 		{/each}
 	</div>
 	<footer>
-		<a href="#/status/{id}">{published}</a>
+		<a href="#/status/{id}">{new Date(published).toLocaleString(undefined, dateOptions)}</a>
 	</footer>
 </article>

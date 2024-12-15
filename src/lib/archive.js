@@ -1,7 +1,5 @@
 import { writable } from 'svelte/store';
 
-export const ssr = false;
-
 export const content = writable(false);
 
 function trueOrTrue(value) {
