@@ -133,18 +133,25 @@ async function fetchAndZip(zipWriter, name, url) {
 	return zipWriter.add(name, reader);	
 }
 
-export async function generateWebsiteZip(statuses, profile) {
+export async function generateWebsiteZip(statuses, profile, callback) {
+	if ( callback === undefined ) {
+		callback = console.log;
+	}
+
 	const zipFileWriter = new BlobWriter();
 	const zipWriter = new ZipWriter(zipFileWriter);
 
+	callback("Generating statuses");
 	const dataReader = new TextReader(JSON.stringify(statuses));
 	await zipWriter.add("outbox.json", dataReader);
 
+	callback("Generating data");
 	const profileReader = new TextReader(JSON.stringify(profile));
 	await zipWriter.add("actor.json", profileReader);
 
 	const db = new PouchDB('toot-archive');
 
+	callback("Loading HTML");
 	const html = await fetch("index.html").then((result) => result.text());
 
 	const indexReader = new TextReader(html);
@@ -154,6 +161,8 @@ export async function generateWebsiteZip(statuses, profile) {
 	const template = document.createElement('template');
 	template.innerHTML = html;
 
+
+	callback("Finding assets");
 	for (const el of Array.from(template.content.querySelectorAll('script'))) {
 		const src = new URL(el.src);
 		await fetchAndZip(zipWriter, src.pathname, src);
@@ -164,19 +173,25 @@ export async function generateWebsiteZip(statuses, profile) {
 		await fetchAndZip(zipWriter, src.pathname, src);
 	}	
 
+	const total = statuses.length;
+	let index = 0;
+
 	//
 	// generate promises for the actions required to add files to the zip archive
 	// using Promise.all should be a little more concurrent/performant
 	//
 	const actions = statuses.map(status => {
+		index += 1;
+		callback(`Adding toot ${index} of ${total}`);
+	
 		const promises = [];
 
 		const filename = `statuses/${status.id}.html`;
 
 		const content = html
-		.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`)
-		.replace(/src="/g, 'src="..')
-		.replace(/href="/g, 'href="..');
+			.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`)
+			.replace(/src="/g, 'src="..')
+			.replace(/href="/g, 'href="..');
 
 		// add a base href?
 		const statusReader = new TextReader(content);
@@ -197,14 +212,17 @@ export async function generateWebsiteZip(statuses, profile) {
 
 	await Promise.all(actions.flat());
 
+	callback("Reticulating splines (this might take a bit)");
 	await zipWriter.close();	
-
 
 	// Retrieves the Blob object containing the zip content into `zipFileBlob`. It
 	// is also returned by zipWriter.close() for more convenience.
+	callback("Grabbing data");
 	const zipFileBlob = await zipFileWriter.getData();
+
 	const fileUrl = URL.createObjectURL(zipFileBlob);
-	console.log(fileUrl);
+
+	callback("Done!");
 	return fileUrl;
 }
 

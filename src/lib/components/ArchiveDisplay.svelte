@@ -2,6 +2,7 @@
 	import Pagination from './Pagination.svelte';
 	import Status from './Status.svelte';
 	import ProfileHeader from './ProfileHeader.svelte';
+	import Modal from './Modal.svelte';
 	import { generateWebsiteZip } from '../data';
 
 	let { data, content = $bindable(), tag = $bindable() } = $props();
@@ -13,9 +14,14 @@
 	let unlistedStatuses = $state(true);
 	let directStatuses = $state(false);
 
+	let showModal = $state(false);
+	let showDownload = $state(false);
+
 	const perPage = parseInt(document.querySelector('body').dataset.tootsPerPage || 20, 10);
 	let values = $derived(applyFilters());
 	let paged = $derived(toPaged(values)); 
+
+	let statusMessage = $state("");
 
 	function reset() {
 		$content = false;
@@ -80,10 +86,18 @@
 	}
 
 	async function generateArchive() {
-		const archiveHref = await generateWebsiteZip(values, data.profile);
+		showDownload = false;
+
+		const archiveHref = await generateWebsiteZip(values, data.profile, (message) => {
+			statusMessage = message;
+		});
+
+		showDownload = true;
+
 		const el = document.querySelector(".download-link");
 		el.href = archiveHref;
-		el.download = "mastodon-archive.zip"
+		el.download = "mastodon-archive.zip";
+
 	}
 </script>
 
@@ -120,8 +134,13 @@
 		</form>
 
 		<fieldset>
-			<button onclick={() => generateArchive()}>generate archive!</button>
-			<a class="download-link" href="">download!</a>
+			<p>You can use this tool to generate a website you can use to host a copy of your archive</p>
+
+			<button onclick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					showModal = true;
+				}}>generate website</button>			
 		</fieldset>
 
 		<fieldset>
@@ -129,3 +148,19 @@
 		</fieldset>
 	</aside>
 </section>
+
+<Modal bind:showModal>
+	<p>This is a pretty basic tool that will do a bunch of file juggling and generate a ZIP file with some HTML and Javascript that you can then upload to a server somewhere to share your toots. It'll apply the visibility settings and any search terms you've specified.</p>
+
+	<p>All of this work is done in your browser -- nothing is every uploaded </p>
+
+	<p><b>Note!</b> This is extremely beta code and is probably horribly broken. Please let me know if there are any problems!</p>
+
+	<button onclick={() => generateArchive()}>generate website!</button>
+
+	<p>{statusMessage}</p>
+	
+	<!-- svelte-ignore a11y_missing_attribute -->
+	<a class="download-link" class:hidden={!showDownload}>download!</a>
+</Modal>
+
