@@ -38,7 +38,7 @@ main > header {
 		max-width: 1000px;
 	}
 
-	& .background > img {
+	& .background img {
 		width: 100%;
 		height: auto;
 		aspect-ratio: 16 / 9;
@@ -50,7 +50,7 @@ main > header {
 		margin-top: 210px;
 		margin-left: 40px;
 
-		& > img {
+		& img {
 			width: 90px;
 			height: 90px;
 		}

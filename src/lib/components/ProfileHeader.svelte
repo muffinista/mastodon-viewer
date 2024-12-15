@@ -5,12 +5,14 @@
 
 <header>
 	<div class="background">
-		<BlobImage src={profile.image.url} alt="" />
+		<a href="/"><BlobImage src={profile.image.url} alt="" /></a>
 	</div>
 
 	<div class="account-info">
-		<BlobImage src={profile.icon.url} alt="profile" />
-		{profile.name}
+		<a href="/">
+			<BlobImage src={profile.icon.url} alt="profile" />
+			{profile.name}
+		</a>
 		{@html profile.summary}
 	</div>
 </header>
