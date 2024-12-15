@@ -97,6 +97,11 @@ async function populateFromFetch() {
 	}
 }
 
+export async function clearData() {
+	const db = new PouchDB('toot-archive');
+	await db.destroy();
+}
+
 export async function populateFromArchive(file) {
 	const db = new PouchDB('toot-archive');
 

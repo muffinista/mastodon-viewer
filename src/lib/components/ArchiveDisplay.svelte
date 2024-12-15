@@ -3,7 +3,7 @@
 	import Status from './Status.svelte';
 	import ProfileHeader from './ProfileHeader.svelte';
 	import Modal from './Modal.svelte';
-	import { generateWebsiteZip } from '../data';
+	import { generateWebsiteZip, clearData } from '../data';
 
 	let { data, content = $bindable(), tag = $bindable() } = $props();
 
@@ -15,6 +15,7 @@
 	let directStatuses = $state(false);
 
 	let showModal = $state(false);
+	let showResetModal = $state(false);
 	let showDownload = $state(false);
 
 	const perPage = parseInt(document.querySelector('body').dataset.tootsPerPage || 20, 10);
@@ -23,7 +24,8 @@
 
 	let statusMessage = $state("");
 
-	function reset() {
+	async function reset() {
+		clearData();
 		$content = false;
 	}
 
@@ -143,8 +145,13 @@
 				}}>generate website</button>			
 		</fieldset>
 
+
 		<fieldset>
-			<button onclick={() => reset()}>reset!</button>
+			<button onclick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					showResetModal = true;
+				}}>reset!</button>
 		</fieldset>
 	</aside>
 </section>
@@ -164,3 +171,11 @@
 	<a class="download-link" class:hidden={!showDownload}>download!</a>
 </Modal>
 
+
+<Modal bind:showModal={showResetModal}>
+	<p>
+		Use this button to delete your archive from your browser cache.
+	</p>
+
+	<button onclick={() => reset()}>reset!</button>
+</Modal>
