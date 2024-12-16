@@ -38,7 +38,7 @@ export async function loadAll() {
 	try {
 		if (useFetch) {
 			console.log('load with fetch!');
-			await populateFromFetch();
+			await populateFromFetch(db);
 		}
 
 		const outboxRaw = await db.get('outbox.json', { attachments: true, binary: true });
@@ -82,7 +82,7 @@ export async function loadAll() {
 	return {};
 }
 
-async function populateFromFetch() {
+async function populateFromFetch(db) {
 	const outbox = await fetch('outbox.json').then((result) => result.json());
 	const profile = await fetch('actor.json').then((result) => result.json());
 
@@ -130,7 +130,6 @@ export async function populateFromArchive(file, callback) {
 	const zipReader = new ZipReader(zipFileReader);
 
 	const entries = await zipReader.getEntries();
-	// console.log(entries);
 
 	callback("Processing statuses");
 
@@ -156,17 +155,20 @@ export async function populateFromArchive(file, callback) {
 }
 
 
-async function fetchAndZip(zipWriter, name, url) {
-	console.log(`fetch ${url} -> ${name}`);
-	const src = await fetch(url).then((result) => result.text());
-	const reader = new TextReader(src);
-	return zipWriter.add(name, reader);	
-}
+// async function fetchAndZip(zipWriter, name, url) {
+// 	console.log(`fetch ${url} -> ${name}`);
+// 	const src = await fetch(url).then((result) => result.text());
+// 	const reader = new TextReader(src);
+// 	await zipWriter.add(name, reader);	
+// }
 
 export async function generateWebsiteZip(statuses, profile, callback) {
 	if ( callback === undefined ) {
 		callback = console.log;
 	}
+
+	const promises = [];
+	const db = new PouchDB('toot-archive');
 
 	const zipFileWriter = new BlobWriter();
 	const zipWriter = new ZipWriter(zipFileWriter);
@@ -179,28 +181,65 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 	const profileReader = new TextReader(JSON.stringify(profile));
 	await zipWriter.add("actor.json", profileReader);
 
-	const db = new PouchDB('toot-archive');
+	// grab icon and image from profile data
+	const icon = profile?.icon?.url;
+	const image = profile?.image?.url;
+
+	if (icon) {
+		const promise = db.get(icon, { attachments: true, binary: true }).then((result) => {
+			const data = result._attachments[icon].data;
+
+			const blobReader = new BlobReader(data);	
+			zipWriter.add(icon, blobReader);
+		});
+		promises.push(promise);	
+	}
+
+	if (image) {
+		const promise = db.get(image, { attachments: true, binary: true }).then((result) => {
+			const data = result._attachments[image].data;
+
+			const blobReader = new BlobReader(data);	
+			zipWriter.add(image, blobReader);
+		})
+		promises.push(promise);	
+	}
 
 	callback("Loading HTML");
 	const html = await fetch("index.html").then((result) => result.text());
 
-	const indexReader = new TextReader(html);
+	const tweakedHtml = html.replace(/data-source="zip"/, 'data-source="fetch"');
+	const indexReader = new TextReader(tweakedHtml);
 	await zipWriter.add("index.html", indexReader);
 
 	// query the index file for attached JS/CSS/assets
 	const template = document.createElement('template');
 	template.innerHTML = html;
 
-
 	callback("Finding assets");
 	for (const el of Array.from(template.content.querySelectorAll('script'))) {
-		const src = new URL(el.src);
-		await fetchAndZip(zipWriter, src.pathname, src);
+		const url = new URL(el.src);
+		const name = url.pathname.replace(/^\/[^/]+\/assets\//, 'assets/')
+
+		console.log(`fetch ${url} -> ${name}`);
+		const src = await fetch(url).then((result) => result.text());
+		const reader = new TextReader(src);
+		promises.push(zipWriter.add(name, reader));	
+	
+		// promises.push(fetchAndZip(zipWriter, src.pathname, src));
 	}	
 
 	for (const el of Array.from(template.content.querySelectorAll('link'))) {
-		const src = new URL(el.href);
-		await fetchAndZip(zipWriter, src.pathname, src);
+		// const src = new URL(el.href);
+		// promises.push(fetchAndZip(zipWriter, src.pathname, src));
+
+		const url = new URL(el.href);
+		const name = url.pathname.replace(/^\/[^/]+\/assets\//, 'assets/');
+
+		console.log(`fetch ${url} -> ${name}`);
+		const src = await fetch(url).then((result) => result.text());
+		const reader = new TextReader(src);
+		promises.push(zipWriter.add(name, reader));	
 	}	
 
 	const total = statuses.length;
@@ -214,19 +253,17 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 		index += 1;
 		callback(`Adding toot ${index} of ${total}`);
 	
-		const promises = [];
+		// const filename = `statuses/${status.id}.html`;
 
-		const filename = `statuses/${status.id}.html`;
+		// const content = html
+		// 	.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`)
+		// 	.replace(/src="/g, 'src="..')
+		// 	.replace(/href="/g, 'href="..');
 
-		const content = html
-			.replace(/<body[^>]+>/, `<body data-status-id=${status.id}>`)
-			.replace(/src="/g, 'src="..')
-			.replace(/href="/g, 'href="..');
+		// // add a base href?
+		// const statusReader = new TextReader(content);
 
-		// add a base href?
-		const statusReader = new TextReader(content);
-
-		promises.push(zipWriter.add(filename, statusReader));
+		// promises.push(zipWriter.add(filename, statusReader));
 
 		for (const attachment of status.attachment) {
 			const url = attachment.url.replace(/^\/[^/]+\/media_attachments\//, 'media_attachments/');

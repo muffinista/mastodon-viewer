@@ -7,5 +7,6 @@ export default defineConfig({
 	plugins: [svelte()], // , viteSingleFile()
 	optimizeDeps: {
 		allowNodeBuiltins: ['pouchdb-browser', 'pouchdb-utils']
-	}
+	},
+	base: './'
 });
