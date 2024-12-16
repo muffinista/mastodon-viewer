@@ -137,7 +137,7 @@
 		</form>
 
 		<fieldset>
-			<p>You can use this tool to generate a website you can use to host a copy of your archive</p>
+			<p>You can use this button to generate a website you can use to host a copy of your archive.</p>
 
 			<button onclick={(e) => {
 					e.preventDefault();

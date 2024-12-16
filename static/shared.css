@@ -79,6 +79,9 @@ main > section {
 	}
 }
 
+.profile {
+	margin-bottom: 1rem;
+}
 .profile > a {
 	display: flex;
 	text-decoration: none;
