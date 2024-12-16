@@ -63,7 +63,7 @@ main > section {
 	max-width: 100rem;
 
 	.toots {
-		max-width: var(--status-width);
+		width: var(--status-width);
 	}
 
 	aside.controls {
