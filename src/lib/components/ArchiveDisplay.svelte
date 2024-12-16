@@ -51,23 +51,24 @@
 
 		const visibilitiesToInclude = visibilities();
 
-		base = base.filter((data) => {
-			return visibilitiesToInclude.includes(data.visibility);
+		base = base.filter((status) => {
+			return visibilitiesToInclude.includes(status.visibility);
 		});
 
 		if (query !== '' && query !== undefined) {
-			base = base.filter((data) => {
+			base = base.filter((status) => {
 				return (
-					data.content.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1 ||
-					data.tags.join(' ').toLowerCase().lastIndexOf(query.toLowerCase()) !== -1
+					(status.summary && status.summary.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1) ||
+					status.content.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1 ||
+					status.tags.join(' ').toLowerCase().lastIndexOf(query.toLowerCase()) !== -1
 				);
 			});
 		}
 
 		if (tag !== '' && tag !== undefined) {
-			base = base.filter((data) => {
+			base = base.filter((status) => {
 				return (
-					data.tags.join(' ').toLowerCase().lastIndexOf(tag.toLowerCase()) !== -1
+					status.tags.join(' ').toLowerCase().lastIndexOf(tag.toLowerCase()) !== -1
 				);
 			});
 		}
@@ -107,8 +108,8 @@
 
 <section class="guts">
 	<div class="toots">
-		{#each paged as { id, content, published, sensitive, attachment, tags }, i}
-			<Status {id} {content} {published} {attachment} {tags} profile={data.profile} />
+		{#each paged as { id, content, published, sensitive, attachment, tags, summary }, i}
+			<Status {id} {summary} {content} {published} {attachment} {tags} profile={data.profile} hideContent={summary !== null} />
 		{/each}
 		<Pagination rows={values} {perPage} bind:currentPage={page} />
 	</div>
@@ -151,7 +152,7 @@
 					e.preventDefault();
 					e.stopPropagation();
 					showResetModal = true;
-				}}>reset!</button>
+				}}>clear data</button>
 		</fieldset>
 	</aside>
 </section>

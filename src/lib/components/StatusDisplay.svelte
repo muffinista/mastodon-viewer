@@ -17,6 +17,7 @@
 	<div class="toots">
 		<Status
 			id={status.id}
+			summary={status.summary}
 			content={status.content}
 			published={status.published}
 			attachment={status.attachment}

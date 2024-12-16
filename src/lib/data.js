@@ -54,6 +54,7 @@ export async function loadAll() {
 						sensitive: toot.object.sensitive,
 						content: toot.object.content,
 						attachment: toot.object.attachment,
+						summary: toot.object.summary,
 						visibility,
 						tags
 					};
