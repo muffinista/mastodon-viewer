@@ -13,6 +13,7 @@
 	let publicStatuses = $state(true);
 	let unlistedStatuses = $state(true);
 	let directStatuses = $state(false);
+	let privateStatuses = $state(false);
 
 	let showModal = $state(false);
 	let showResetModal = $state(false);
@@ -35,12 +36,17 @@
 		if (publicStatuses) {
 			values.push('public');
 		}
+
 		if (unlistedStatuses) {
 			values.push('unlisted');
 		}
 
 		if (directStatuses) {
 			values.push('direct');
+		}
+
+		if (privateStatuses) {
+			values.push('private');
 		}
 
 		return values;
@@ -108,8 +114,8 @@
 
 <section class="guts">
 	<div class="toots">
-		{#each paged as { id, content, published, sensitive, attachment, tags, summary }, i}
-			<Status {id} {summary} {content} {published} {attachment} {tags} profile={data.profile} hideContent={summary !== null} />
+		{#each paged as { id, content, published, sensitive, attachment, tags, summary, visibility }, i}
+			<Status {id} {summary} {content} {published} {attachment} {tags} profile={data.profile} {visibility} hideContent={summary !== null} />
 		{/each}
 		<Pagination rows={values} {perPage} bind:currentPage={page} />
 	</div>
@@ -127,8 +133,12 @@
 					Include unlisted statuses
 				</label>
 				<label>
-					<input type="checkbox" bind:checked={directStatuses} onchange={applyFilters} />
+					<input type="checkbox" bind:checked={privateStatuses} onchange={applyFilters} />
 					Include private statuses
+				</label>
+				<label>
+					<input type="checkbox" bind:checked={directStatuses} onchange={applyFilters} />
+					Include direct statuses
 				</label>
 			</fieldset>
 			<fieldset>

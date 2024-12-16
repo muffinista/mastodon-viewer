@@ -132,8 +132,13 @@ article.status {
 	footer {
 		margin-bottom: 0.8em;
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: end;
+		justify-content: end;
+
+		> * {
+			margin-left: 5px;
+		}
 	}
 }
 

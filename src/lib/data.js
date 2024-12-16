@@ -2,6 +2,35 @@ import PouchDB from 'pouchdb';
 import { BlobReader, BlobWriter, ZipReader, ZipWriter, TextReader } from '@zip.js/zip.js';
 import mime from 'mime/lite';
 
+// https://github.com/mastodon/mastodon/blob/main/app/lib/activitypub/tag_manager.rb#L5
+function visibilityForStatus(toot) {
+	if (toot.object.directMessage === true) {
+		return 'direct';
+	}
+	
+	if (
+		toot.object.to[0]?.lastIndexOf('Public') !== -1
+	) {
+		return 'public';
+	} 
+	
+	if (
+		toot.object.cc[0]?.lastIndexOf('Public') !== -1 &&
+		toot.object.to[0]?.lastIndexOf('/followers') !== -1
+	) {
+		return 'unlisted';
+	}
+
+	if (
+		toot.object.to[0]?.lastIndexOf('/followers') !== -1
+	) {
+		return 'private';
+	}
+
+	// fallback visibility
+	return 'private';
+}
+
 export async function loadAll() {
 	const db = new PouchDB('toot-archive');
 	const useFetch = document.querySelector('body').dataset.source !== 'zip';
@@ -24,25 +53,9 @@ export async function loadAll() {
 				// 'Announce' is for boosts, ignore for now since they don't have any data really
 				.filter((toot) => toot.type !== 'Announce')
 				.map((toot) => {
-					const id = toot.object.id.split(/\//).slice(-1)[0];
-					let visibility;
 
-					if (toot.object.directMessage === true) {
-						visibility = 'direct';
-					} else if (
-						toot.object.to[0]?.lastIndexOf('Public') !== -1 ||
-						toot.object.cc[0]?.lastIndexOf('Public') !== -1
-					) {
-						visibility = 'public';
-					} else if (
-						toot.object.to[0]?.lastIndexOf('/followers') !== -1 ||
-						toot.object.cc[0]?.lastIndexOf('/followers') !== -1
-					) {
-						visibility = 'unlisted';
-					} else {
-						// console.log(toot);
-					}
-					// gotta figure out what differentiates direct and private here
+					const id = toot.object.id.split(/\//).slice(-1)[0];
+					const visibility = visibilityForStatus(toot);
 
 					const tags = toot.object.tag
 						.filter((t) => t.type === 'Hashtag')
