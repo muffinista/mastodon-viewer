@@ -13,6 +13,8 @@
 	let status_id = $derived(checkForStatus());
 	let tag = $derived(checkForTag());
 
+	const showExport = document.querySelector('body').dataset.source !== "fetch";
+
 	function checkForStatus() {
 		if ( document.querySelector('body').dataset.statusId ) {
 			return document.querySelector('body').dataset.statusId;
@@ -50,7 +52,7 @@
 		{#if status_id !== undefined}
 			<StatusDisplay {data} {status_id} />
 		{:else}
-			<ArchiveDisplay {data} {content} {tag} />
+			<ArchiveDisplay {data} {content} {tag} {showExport} />
 		{/if}
 	{:else}
 		<ZipChooser {onComplete} />

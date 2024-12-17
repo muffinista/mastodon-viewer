@@ -5,7 +5,7 @@
 	import Modal from './Modal.svelte';
 	import { generateWebsiteZip, clearData } from '../data';
 
-	let { data, content = $bindable(), tag = $bindable() } = $props();
+	let { data, content = $bindable(), tag = $bindable(), showExport } = $props();
 
 	let page = $state(0);
 	let query = $state();
@@ -146,24 +146,26 @@
 			</fieldset>
 		</form>
 
-		<fieldset>
-			<p>You can use this button to generate a website you can use to host a copy of your archive.</p>
+		{#if showExport}
+			<fieldset>
+				<p>You can use this button to generate a website you can use to host a copy of your archive.</p>
 
-			<button onclick={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					showModal = true;
-				}}>generate website</button>			
-		</fieldset>
+				<button onclick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						showModal = true;
+					}}>generate website</button>			
+			</fieldset>
 
 
-		<fieldset>
-			<button onclick={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					showResetModal = true;
-				}}>clear data</button>
-		</fieldset>
+			<fieldset>
+				<button onclick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						showResetModal = true;
+					}}>clear data</button>
+			</fieldset>
+		{/if}
 	</aside>
 </section>
 
