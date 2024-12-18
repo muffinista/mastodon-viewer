@@ -24,7 +24,7 @@
 
 <section class="guts">
 	<div>
-		<h1>Hey!</h1>
+		<h1>Mastodon Archive Viewer</h1>
 
 		<p>You can use this page to view an archive of your toots, and to generate a website you can publish somewhere to share your archive with others. This tool works 100% within your browser -- nothing is uploaded to this server, and your data isn't shared with anyone else.</p>
 
