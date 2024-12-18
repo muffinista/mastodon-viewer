@@ -20,7 +20,8 @@
 		"prettier-plugin-svelte": "^3.3.2",
 		"svelte": "^5.6.2",
 		"vite": "^6.0.2",
-		"vite-plugin-singlefile": "github:slebs/vite-plugin-singlefile"
+		"vite-plugin-singlefile": "github:slebs/vite-plugin-singlefile",
+		"vite-plugin-static-copy": "^2.2.0"
 	},
 	"dependencies": {
 		"@zip.js/zip.js": "^2.7.53",
