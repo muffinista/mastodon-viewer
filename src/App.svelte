@@ -58,3 +58,7 @@
 		<ZipChooser {onComplete} />
 	{/if}
 {/if}
+
+<footer class="footer">
+	<a href="https://github.com/muffinista/mastodon-viewer">Mastodon Viewer on GitHub</a>. Please report any problems/issues!
+</footer>

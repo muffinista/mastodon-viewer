@@ -13,11 +13,16 @@
 	--thumbnail-size: 200px;
 }
 
+html, body {
+	height: 100%;
+}
+
 body {
 	background-color: var(--background-color);
 	color: var(--text-color);
 	font-family: var(--font-family);
 	font-size: var(--font-size);
+	margin: 0px;
 }
 
 a {
@@ -61,6 +66,9 @@ main > header {
 main > section {
 	display: flex;
 	max-width: 100rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	padding-bottom: 2rem;
 
 	.toots {
 		width: var(--status-width);
@@ -209,4 +217,20 @@ dialog[open]::backdrop {
 
 .hidden {
 	display: none;
+}
+
+main#app {
+	min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+main#app > footer.footer {
+  background-color: rgb(75 70 74);
+  color: #fff;
+  padding: 20px;
+
+	a {
+		color: white;
+	}
 }
