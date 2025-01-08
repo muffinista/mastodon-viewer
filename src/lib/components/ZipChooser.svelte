@@ -26,7 +26,13 @@
 	<div>
 		<h1>Mastodon Archive Viewer</h1>
 
-		<p>You can use this page to view an archive of your toots, and to generate a website you can publish somewhere to share your archive with others. This tool works 100% within your browser -- nothing is uploaded to this server, and your data isn't shared with anyone else.</p>
+		<p>This website is a tool you can use to browse an archive of your toots, and to generate 
+			a website you can publish somewhere to share your archive with others. This tool works 
+			100% within your browser -- nothing is uploaded to this server, and your data isn't shared 
+			with anyone else.</p>
+
+		<p>Once you upload your archive, you'll be able to search your toots, filter them by hashtag 
+			or visibility status, etc.</p>
 
 		<p>To get started, use the browse button to point to your archive zip file here:</p>
 

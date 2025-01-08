@@ -70,6 +70,10 @@ main > section {
 	padding-right: 1rem;
 	padding-bottom: 2rem;
 
+	div > p {
+		max-width: 50rem;
+	}
+
 	.toots {
 		width: var(--status-width);
 	}
@@ -77,6 +81,9 @@ main > section {
 	aside.controls {
 		max-width: 300px;
 		margin-left: 30px;
+		h1 {
+			margin-bottom: 0.2rem;
+		}
 		fieldset {
 			display: flex;
 			flex-direction: column;
@@ -185,8 +192,9 @@ dialog {
 		cursor: pointer;
 	}
 }
+
 dialog::backdrop {
-	background: rgba(0, 0, 0, 0.3);
+	background: rgba(100, 100, 100, 0.8);
 }
 dialog > div {
 	padding: 1em;

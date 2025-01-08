@@ -21,7 +21,7 @@
 
 	const perPage = parseInt(document.querySelector('body').dataset.tootsPerPage || 20, 10);
 	let values = $derived(applyFilters());
-	let paged = $derived(toPaged(values)); 
+	let paged = $derived(toPaged(values));
 
 	let statusMessage = $state("");
 
@@ -105,8 +105,7 @@
 
 		const el = document.querySelector(".download-link");
 		el.href = archiveHref;
-		el.download = "mastodon-archive.zip";
-
+		el.download = `${data.profile.preferredUsername}-mastodon-archive.zip`;
 	}
 </script>
 
@@ -148,17 +147,18 @@
 
 		{#if showExport}
 			<fieldset>
-				<p>You can use this button to generate a website you can use to host a copy of your archive.</p>
+				<p>You can use the 'generate archive' tool to generate a website you can use to host a copy of your archive.</p>
 
 				<button onclick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
 						showModal = true;
-					}}>generate website</button>			
+					}}>generate archive website</button>
 			</fieldset>
 
 
 			<fieldset>
+				<p>Use 'clear data' to erase your data from the browser cache.</p>
 				<button onclick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
@@ -172,14 +172,14 @@
 <Modal bind:showModal>
 	<p>This is a pretty basic tool that will do a bunch of file juggling and generate a ZIP file with some HTML and Javascript that you can then upload to a server somewhere to share your toots. It'll apply the visibility settings and any search terms you've specified.</p>
 
-	<p>All of this work is done in your browser -- nothing is every uploaded </p>
+	<p>All of this work is done in your browser -- nothing is uploaded to this server.</p>
 
 	<p><b>Note!</b> This is extremely beta code and is probably horribly broken. Please let me know if there are any problems!</p>
 
 	<button onclick={() => generateArchive()}>generate website!</button>
 
 	<p>{statusMessage}</p>
-	
+
 	<!-- svelte-ignore a11y_missing_attribute -->
 	<a class="download-link" class:hidden={!showDownload}>download!</a>
 </Modal>
