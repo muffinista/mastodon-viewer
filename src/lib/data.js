@@ -7,13 +7,11 @@ function visibilityForStatus(toot) {
 	if (toot.object.directMessage === true) {
 		return 'direct';
 	}
-	
-	if (
-		toot.object.to[0]?.lastIndexOf('Public') !== -1
-	) {
+
+	if (toot.object.to[0]?.lastIndexOf('Public') !== -1) {
 		return 'public';
-	} 
-	
+	}
+
 	if (
 		toot.object.cc[0]?.lastIndexOf('Public') !== -1 &&
 		toot.object.to[0]?.lastIndexOf('/followers') !== -1
@@ -21,9 +19,7 @@ function visibilityForStatus(toot) {
 		return 'unlisted';
 	}
 
-	if (
-		toot.object.to[0]?.lastIndexOf('/followers') !== -1
-	) {
+	if (toot.object.to[0]?.lastIndexOf('/followers') !== -1) {
 		return 'private';
 	}
 
@@ -61,9 +57,11 @@ export async function loadAll() {
 					// be in different places depending on if we're loading from the original
 					// mastodon data or the cleaned data we export
 					const visibility = toot.object.visibility || visibilityForStatus(toot);
-					const tags = toot.object.tags || toot.object.tag
-						.filter((t) => t.type === 'Hashtag')
-						.map((t) => t.name.replace(/^#/, ''));
+					const tags =
+						toot.object.tags ||
+						toot.object.tag
+							.filter((t) => t.type === 'Hashtag')
+							.map((t) => t.name.replace(/^#/, ''));
 
 					return {
 						id: id,
@@ -94,7 +92,7 @@ async function populateFromFetch(db) {
 		_id: 'outbox.json'
 	};
 
-	await db.get('outbox.json', function(err, doc) {
+	await db.get('outbox.json', function (err, doc) {
 		if (!err) {
 			data._rev = doc._rev;
 		}
@@ -103,10 +101,15 @@ async function populateFromFetch(db) {
 	try {
 		await db.put(data);
 		const doc = await db.get('outbox.json');
-		await db.putAttachment('outbox.json', 'outbox.json', doc._rev, new Blob([outbox], {
-				type: "application/json",
-			}), 'text/json');
-
+		await db.putAttachment(
+			'outbox.json',
+			'outbox.json',
+			doc._rev,
+			new Blob([outbox], {
+				type: 'application/json'
+			}),
+			'text/json'
+		);
 	} catch (e) {
 		console.log(e);
 	}
@@ -115,7 +118,7 @@ async function populateFromFetch(db) {
 		_id: 'actor.json'
 	};
 
-	await db.get('actor.json', function(err, doc) {
+	await db.get('actor.json', function (err, doc) {
 		if (!err) {
 			data._rev = doc._rev;
 		}
@@ -125,9 +128,15 @@ async function populateFromFetch(db) {
 		await db.put(data);
 
 		const doc = await db.get('actor.json');
-		await db.putAttachment('actor.json', 'actor.json', doc._rev, new Blob([profile], {
-			type: "application/json",
-		}), 'text/json');
+		await db.putAttachment(
+			'actor.json',
+			'actor.json',
+			doc._rev,
+			new Blob([profile], {
+				type: 'application/json'
+			}),
+			'text/json'
+		);
 	} catch (e) {
 		console.log(e);
 	}
@@ -139,21 +148,21 @@ export async function clearData() {
 }
 
 export async function populateFromArchive(file, callback) {
-	if ( callback === undefined ) {
+	if (callback === undefined) {
 		callback = console.log;
 	}
 
 	const db = new PouchDB('toot-archive');
 
 	// file is a zip let's deal with it
-	callback("Loading zip");
+	callback('Loading zip');
 	const zipFileReader = new BlobReader(file);
 
 	const zipReader = new ZipReader(zipFileReader);
 
 	const entries = await zipReader.getEntries();
 
-	callback("Processing statuses");
+	callback('Processing statuses');
 
 	for (const entry of entries) {
 		callback(`processing ${entry.filename}`);
@@ -170,22 +179,21 @@ export async function populateFromArchive(file, callback) {
 
 			const doc = await db.get(entry.filename);
 			await db.putAttachment(entry.filename, entry.filename, doc._rev, file, mimeType);
-		} catch (e) {}
+		} catch {}
 	} // for entries
 
 	callback('Done!');
 }
 
-
 // async function fetchAndZip(zipWriter, name, url) {
 // 	console.log(`fetch ${url} -> ${name}`);
 // 	const src = await fetch(url).then((result) => result.text());
 // 	const reader = new TextReader(src);
-// 	await zipWriter.add(name, reader);	
+// 	await zipWriter.add(name, reader);
 // }
 
 export async function generateWebsiteZip(statuses, profile, callback) {
-	if ( callback === undefined ) {
+	if (callback === undefined) {
 		callback = console.log;
 	}
 
@@ -195,16 +203,18 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 	const zipFileWriter = new BlobWriter();
 	const zipWriter = new ZipWriter(zipFileWriter);
 
-	callback("Generating statuses");
+	callback('Generating statuses');
 	const statusData = {
-		orderedItems: statuses.map((s) => { return {object: s}})
+		orderedItems: statuses.map((s) => {
+			return { object: s };
+		})
 	};
 	const dataReader = new TextReader(JSON.stringify(statusData));
-	await zipWriter.add("mastodon-archive/outbox.json", dataReader);
+	await zipWriter.add('mastodon-archive/outbox.json', dataReader);
 
-	callback("Generating data");
+	callback('Generating data');
 	const profileReader = new TextReader(JSON.stringify(profile));
-	await zipWriter.add("mastodon-archive/actor.json", profileReader);
+	await zipWriter.add('mastodon-archive/actor.json', profileReader);
 
 	// grab icon and image from profile data
 	const icon = profile?.icon?.url;
@@ -214,45 +224,45 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 		const promise = db.get(icon, { attachments: true, binary: true }).then((result) => {
 			const data = result._attachments[icon].data;
 
-			const blobReader = new BlobReader(data);	
+			const blobReader = new BlobReader(data);
 			zipWriter.add(`mastodon-archive/${icon}`, blobReader);
 		});
-		promises.push(promise);	
+		promises.push(promise);
 	}
 
 	if (image) {
 		const promise = db.get(image, { attachments: true, binary: true }).then((result) => {
 			const data = result._attachments[image].data;
 
-			const blobReader = new BlobReader(data);	
+			const blobReader = new BlobReader(data);
 			zipWriter.add(`mastodon-archive/${image}`, blobReader);
-		})
-		promises.push(promise);	
+		});
+		promises.push(promise);
 	}
 
-	callback("Loading HTML");
-	const html = await fetch("index.html").then((result) => result.text());
+	callback('Loading HTML');
+	const html = await fetch('index.html').then((result) => result.text());
 
 	const tweakedHtml = html.replace(/data-source="zip"/, 'data-source="fetch"');
 	const indexReader = new TextReader(tweakedHtml);
-	await zipWriter.add("mastodon-archive/index.html", indexReader);
+	await zipWriter.add('mastodon-archive/index.html', indexReader);
 
 	// query the index file for attached JS/CSS/assets
 	const template = document.createElement('template');
 	template.innerHTML = html;
 
-	callback("Finding assets");
+	callback('Finding assets');
 	for (const el of Array.from(template.content.querySelectorAll('script'))) {
 		const url = new URL(el.src);
-		const name = url.pathname.replace(/^\/[^/]+\/assets\//, 'assets/')
+		const name = url.pathname.replace(/^\/[^/]+\/assets\//, 'assets/');
 
 		console.log(`fetch ${url} -> ${name}`);
 		const src = await fetch(url).then((result) => result.text());
 		const reader = new TextReader(src);
-		promises.push(zipWriter.add(name, reader));	
-	
+		promises.push(zipWriter.add(name, reader));
+
 		// promises.push(fetchAndZip(zipWriter, src.pathname, src));
-	}	
+	}
 
 	for (const el of Array.from(template.content.querySelectorAll('link'))) {
 		// const src = new URL(el.href);
@@ -264,8 +274,8 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 		console.log(`fetch ${url} -> ${name}`);
 		const src = await fetch(url).then((result) => result.text());
 		const reader = new TextReader(src);
-		promises.push(zipWriter.add(`mastodon-archive/${name}`, reader));	
-	}	
+		promises.push(zipWriter.add(`mastodon-archive/${name}`, reader));
+	}
 
 	const total = statuses.length;
 	let index = 0;
@@ -274,10 +284,10 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 	// generate promises for the actions required to add files to the zip archive
 	// using Promise.all should be a little more concurrent/performant
 	//
-	const actions = statuses.map(status => {
+	const actions = statuses.map((status) => {
 		index += 1;
 		callback(`Adding toot ${index} of ${total}`);
-	
+
 		// const filename = `statuses/${status.id}.html`;
 
 		// const content = html
@@ -295,26 +305,26 @@ export async function generateWebsiteZip(statuses, profile, callback) {
 			const promise = db.get(url, { attachments: true, binary: true }).then((result) => {
 				const data = result._attachments[url].data;
 
-				const blobReader = new BlobReader(data);	
+				const blobReader = new BlobReader(data);
 				zipWriter.add(`mastodon-archive/${url}`, blobReader);
-			})
-			promises.push(promise);	
+			});
+			promises.push(promise);
 		}
 	});
 
 	await Promise.all(actions.flat());
 
-	callback("Reticulating splines (this might take a bit)");
-	await zipWriter.close();	
+	callback('Reticulating splines (this might take a bit)');
+	await zipWriter.close();
 
 	// Retrieves the Blob object containing the zip content into `zipFileBlob`. It
 	// is also returned by zipWriter.close() for more convenience.
-	callback("Grabbing data");
+	callback('Grabbing data');
 	const zipFileBlob = await zipFileWriter.getData();
 
 	const fileUrl = URL.createObjectURL(zipFileBlob);
 
-	callback("Done!");
+	callback('Done!');
 	return fileUrl;
 }
 

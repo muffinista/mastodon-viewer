@@ -1,9 +1,18 @@
 <script>
-	import { onMount } from 'svelte';
 	import Profile from './Profile.svelte';
 	import Attachment from './Attachment.svelte';
 
-	let { content, id, published, profile, attachment, tags, summary, visibility, hideContent = false } = $props();
+	let {
+		content,
+		id,
+		published,
+		profile,
+		attachment,
+		tags,
+		summary,
+		visibility,
+		hideContent = false
+	} = $props();
 
 	const dateOptions = {
 		dateStyle: 'short',
@@ -26,15 +35,17 @@
 		<Profile {profile} />
 	</header>
 
-
 	{#if summary}
 		<div class="summary">
-			{summary} 
-			<button onclick={(e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				hideContent = !hideContent;
-			}}>show {#if hideContent}more{:else}less{/if}</button>
+			{summary}
+			<button
+				onclick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					hideContent = !hideContent;
+				}}
+				>show {#if hideContent}more{:else}less{/if}</button
+			>
 		</div>
 	{/if}
 
@@ -53,6 +64,7 @@
 	</div>
 
 	<footer>
-		<span class="visibility">{visibility}</span> <a href="#/status/{id}">{new Date(published).toLocaleString(undefined, dateOptions)}</a>
+		<span class="visibility">{visibility}</span>
+		<a href="#/status/{id}">{new Date(published).toLocaleString(undefined, dateOptions)}</a>
 	</footer>
 </article>

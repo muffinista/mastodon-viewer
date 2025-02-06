@@ -34,8 +34,7 @@ And you should be able to view the development server at http://localhost:5173/
 
 `ArchiveDisplay.svelte` is used to output the toots, user profile, etc.
 
-A user can choose to generate a website from their archive. The `generateWebsiteZip` function does this work. It basically makes another zip file that contains a lightly filtered copy of the users toots, all their media, etc. It actually uses the same HTML/JS as the archive tool itself, although the `populateFromFetch` function is called to load the data. 
-
+A user can choose to generate a website from their archive. The `generateWebsiteZip` function does this work. It basically makes another zip file that contains a lightly filtered copy of the users toots, all their media, etc. It actually uses the same HTML/JS as the archive tool itself, although the `populateFromFetch` function is called to load the data.
 
 ## Building
 

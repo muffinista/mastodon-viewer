@@ -23,7 +23,7 @@
 	let values = $derived(applyFilters());
 	let paged = $derived(toPaged(values));
 
-	let statusMessage = $state("");
+	let statusMessage = $state('');
 
 	async function reset() {
 		clearData();
@@ -64,7 +64,8 @@
 		if (query !== '' && query !== undefined) {
 			base = base.filter((status) => {
 				return (
-					(status.summary && status.summary.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1) ||
+					(status.summary &&
+						status.summary.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1) ||
 					status.content.toLowerCase().lastIndexOf(query.toLowerCase()) !== -1 ||
 					status.tags.join(' ').toLowerCase().lastIndexOf(query.toLowerCase()) !== -1
 				);
@@ -73,9 +74,7 @@
 
 		if (tag !== '' && tag !== undefined) {
 			base = base.filter((status) => {
-				return (
-					status.tags.join(' ').toLowerCase().lastIndexOf(tag.toLowerCase()) !== -1
-				);
+				return status.tags.join(' ').toLowerCase().lastIndexOf(tag.toLowerCase()) !== -1;
 			});
 		}
 
@@ -103,7 +102,7 @@
 
 		showDownload = true;
 
-		const el = document.querySelector(".download-link");
+		const el = document.querySelector('.download-link');
 		el.href = archiveHref;
 		el.download = `${data.profile.preferredUsername}-mastodon-archive.zip`;
 	}
@@ -113,8 +112,19 @@
 
 <section class="guts">
 	<div class="toots">
-		{#each paged as { id, content, published, sensitive, attachment, tags, summary, visibility }, i}
-			<Status {id} {summary} {content} {published} {attachment} {tags} profile={data.profile} {visibility} hideContent={summary !== null} />
+		{#each paged as { id, content, published, sensitive, attachment, tags, summary, visibility }}
+			<Status
+				{id}
+				{summary}
+				{content}
+				{sensitive}
+				{published}
+				{attachment}
+				{tags}
+				profile={data.profile}
+				{visibility}
+				hideContent={summary !== null}
+			/>
 		{/each}
 		<Pagination rows={values} {perPage} bind:currentPage={page} />
 	</div>
@@ -147,34 +157,47 @@
 
 		{#if showExport}
 			<fieldset>
-				<p>You can use the 'generate archive' tool to generate a website you can use to host a copy of your archive.</p>
+				<p>
+					You can use the 'generate archive' tool to generate a website you can use to host a copy
+					of your archive.
+				</p>
 
-				<button onclick={(e) => {
+				<button
+					onclick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
 						showModal = true;
-					}}>generate archive website</button>
+					}}>generate archive website</button
+				>
 			</fieldset>
-
 
 			<fieldset>
 				<p>Use 'clear data' to erase your data from the browser cache.</p>
-				<button onclick={(e) => {
+				<button
+					onclick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
 						showResetModal = true;
-					}}>clear data</button>
+					}}>clear data</button
+				>
 			</fieldset>
 		{/if}
 	</aside>
 </section>
 
 <Modal bind:showModal>
-	<p>This is a pretty basic tool that will do a bunch of file juggling and generate a ZIP file with some HTML and Javascript that you can then upload to a server somewhere to share your toots. It'll apply the visibility settings and any search terms you've specified.</p>
+	<p>
+		This is a pretty basic tool that will do a bunch of file juggling and generate a ZIP file with
+		some HTML and Javascript that you can then upload to a server somewhere to share your toots.
+		It'll apply the visibility settings and any search terms you've specified.
+	</p>
 
 	<p>All of this work is done in your browser -- nothing is uploaded to this server.</p>
 
-	<p><b>Note!</b> This is extremely beta code and is probably horribly broken. Please let me know if there are any problems!</p>
+	<p>
+		<b>Note!</b> This is extremely beta code and is probably horribly broken. Please let me know if there
+		are any problems!
+	</p>
 
 	<button onclick={() => generateArchive()}>generate website!</button>
 
@@ -184,11 +207,8 @@
 	<a class="download-link" class:hidden={!showDownload}>download!</a>
 </Modal>
 
-
 <Modal bind:showModal={showResetModal}>
-	<p>
-		Use this button to delete your archive from your browser cache.
-	</p>
+	<p>Use this button to delete your archive from your browser cache.</p>
 
 	<button onclick={() => reset()}>reset!</button>
 </Modal>

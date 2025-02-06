@@ -4,7 +4,7 @@ name: jenkins-deploy
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,4 +20,4 @@ jobs:
           job_name: ${{ secrets.JENKINS_JOB }}
           username: ${{ secrets.JENKINS_USER }}
           api_token: ${{ secrets.JENKINS_TOKEN }}
-          timeout: "2000"
+          timeout: '2000'

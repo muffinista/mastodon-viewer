@@ -7,16 +7,15 @@
 	import { loadAll } from './lib/data.js';
 	import { url } from './lib/url.js';
 
-
 	let loaded = $state(false);
 	let data = $state();
 	let status_id = $derived(checkForStatus());
 	let tag = $derived(checkForTag());
 
-	const showExport = document.querySelector('body').dataset.source !== "fetch";
+	const showExport = document.querySelector('body').dataset.source !== 'fetch';
 
 	function checkForStatus() {
-		if ( document.querySelector('body').dataset.statusId ) {
+		if (document.querySelector('body').dataset.statusId) {
 			return document.querySelector('body').dataset.statusId;
 		}
 
@@ -35,11 +34,11 @@
 		return undefined;
 	}
 
-	let onComplete = async function onComplete () {
+	let onComplete = async function onComplete() {
 		data = await loadAll();
 		loaded = true;
 		$content = true;
-	}
+	};
 
 	onMount(async () => {
 		data = await loadAll();
@@ -60,5 +59,6 @@
 {/if}
 
 <footer class="footer">
-	<a href="https://github.com/muffinista/mastodon-viewer">Mastodon Viewer on GitHub</a>. Please report any problems/issues!
+	<a href="https://github.com/muffinista/mastodon-viewer">Mastodon Viewer on GitHub</a>. Please
+	report any problems/issues!
 </footer>
